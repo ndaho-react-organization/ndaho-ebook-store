@@ -21,7 +21,7 @@ function App() {
       <Title>Pages listant les livres</Title>
       <BookList />
       <FormAddBook addNewBook={addNewBook} />
-      <Button btnType="btn-success w-100" clic={handleAddBook}>{buttonLabel}</Button>
+      <Button btnCustomCss="btn-success w-100" clic={handleAddBook}>{buttonLabel}</Button>
     </div>
   );
 }
