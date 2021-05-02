@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Book from './components/Book';
+import Button from "./components/Button";
+import FormAddBook from "./components/FormAddBook";
 
-const BookList = (props) => {
+
+const BookList = props => {
 
     const [books, setBooks] = useState([]);
+    const [newBookForm, showNewBookForm] = useState(false)
+    const [lastBookId, setLastBooId] = useState(0)
+
+    const buttonLabel = newBookForm ? "Fermer l'ajout" : "Ajouter";
 
     useEffect(() => {
-        console.log("on first render")
         setBooks([
             {
                 id: 1,
@@ -34,11 +40,14 @@ const BookList = (props) => {
             },
 
         ]);
+        //set initial state --> a voir pour la recuperer depuis books 
+        setLastBooId(4)
     }, [])
 
-    const handleRemoveBook = (bookId) => {
+
+    const handleRemoveBook = bookId => {
         const booktoDeleteIndex = books.findIndex(book => {
-            return book.id == bookId;
+            return book.id === bookId;
         })
         //copy the arrays to respect amuta...
         const newBooks = books.slice();
@@ -47,6 +56,28 @@ const BookList = (props) => {
         //set new books
         setBooks(newBooks);
     }
+
+    const handleAddBook = () => showNewBookForm(!newBookForm);
+
+    const handleValidionAddBookForm = form => {
+        //copy for mutability
+        const newBooks = [...books];
+        const lastBookIndex = lastBookId + 1;
+        const newBook = {
+            id: lastBookIndex,
+            ...form
+        }
+
+        //add new book
+        newBooks.push(newBook);
+
+        //set books
+        setBooks(newBooks);
+
+        //setLastBookId by using lastValue
+        setLastBooId(lastBookId => lastBookId + 1)
+    }
+
 
     return (
         <div>
@@ -69,6 +100,9 @@ const BookList = (props) => {
                     })}
                 </tbody>
             </table>
+
+            <FormAddBook bookForm={newBookForm} validation={handleValidionAddBookForm} />
+            <Button btnCustomCss="btn-success w-100" clic={handleAddBook}>{buttonLabel}</Button>
         </div>
     );
 }
